@@ -74,6 +74,11 @@ def main() -> None:
     # Write exactly the line: no trailing newline, the judge reads
     # exactly the bytes in the file.
     output_path.write_text(LINE, encoding="utf-8")
+    # Round-trip check: a partial write or an encoding slip must fail
+    # loudly here instead of shipping an entry the gate would refuse.
+    written = output_path.read_text(encoding="utf-8")
+    if written != LINE:
+        raise SystemExit("entry.txt round-trip mismatch after write")
 
 
 if __name__ == "__main__":
